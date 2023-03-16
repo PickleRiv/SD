@@ -2,19 +2,19 @@ package sharedRegions;
 
 public class AssaultParty {
     
-    public static int crawlIn(int sendAssaultParty){
+    public synchronized int crawlIn(){
         return 0;
     }    
 
-    public static int sendAssaultParty(){
+    public synchronized int sendAssaultParty(){
         return 0;
     }    
 
-    public static int CrawlOut(){
+    public synchronized int CrawlOut(){
         return 0;
     }    
 
-    public static int reverseDirection(){
+    public synchronized int reverseDirection(){
         return 0;
     } 
 }

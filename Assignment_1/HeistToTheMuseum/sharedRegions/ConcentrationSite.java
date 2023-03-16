@@ -2,23 +2,23 @@ package sharedRegions;
 
 public class ConcentrationSite {
     
-    public static int appraiseSit(){
+    public synchronized int appraiseSit(){
         return 0;
     }
 
-    public static boolean amINeeded(){
+    public synchronized boolean amINeeded(){
         return true;
     }
 
-    public static int prepareAssaultParty(){
+    public synchronized int prepareAssaultParty(){
         return 0;
     }
 
-    public static int prepareExcursion(){
+    public synchronized int prepareExcursion(){
         return 0;
     }
 
-    public static int sumUpRecords(){
-        return 0;
+    public synchronized void sumUpResults(){
+        
     }
 }
