@@ -1,21 +1,19 @@
 package sharedRegions;
 
+import entities.*;
+
 public class ConcentrationSite {
     
-    public static int appraiseSit(){
-        return 0;
-    }
-
-    public static boolean amINeeded(){
+    public synchronized boolean amINeeded(){
+        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CONCENTRATION_SITE);
         return true;
     }
 
-    public static int prepareAssaultParty(){
-        return 0;
+    public synchronized void prepareAssaultParty(){
     }
 
-    public static int prepareExcursion(){
-        return 0;
+    public synchronized void prepareExcursion(){
+        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
     }
 
     public static int sumUpRecords(){
