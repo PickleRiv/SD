@@ -1,9 +1,21 @@
 package sharedRegions;
 
+import entities.*;
+import main.*;
+
 public class ControlAndCollectionSite {
+    //private final GeneralRepos repos;
     
-    public static int startsOperations(){
-        return 0;
+    public synchronized void startOperations(){
+        ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
+        //repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
+
+        try{
+            wait();
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
+
     }
 
     public static int takeARest(int handACanvas){
