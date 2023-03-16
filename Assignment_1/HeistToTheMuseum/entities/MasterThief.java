@@ -35,9 +35,24 @@ public class MasterThief extends Thread {
     
     @Override
     public void run(){
+
+        ccSite.startOperations();
+
         while(true){
-            if (true)
+            int i = 0;
+            if (i == 1){ //  se os ladroes tiverem todos no ConSite e salas todas vazias
+                conSite.sumUpResults();
                 break;
+            }
+            else if (i == 20000){ // se arrays ou fifo cheios???
+                conSite.prepareAssaultParty();
+                aParty.sendAssaultParty();
+            }
+            else{
+                ccSite.takeARest();
+                ccSite.collectACanvas();
+            }
+
         }
     }
 }
