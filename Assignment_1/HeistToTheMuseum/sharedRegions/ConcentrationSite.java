@@ -2,15 +2,15 @@ package sharedRegions;
 
 public class ConcentrationSite {
     
-    public static int appraiseSit(int amINeeded){
+    public static int appraiseSit(){
         return 0;
     }
 
-    public static int amINeeded(int prepareAssaultParty){
-        return 0;
+    public static boolean amINeeded(){
+        return true;
     }
 
-    public static int prepareAssaultParty(int prepareExcursion){
+    public static int prepareAssaultParty(){
         return 0;
     }
 

@@ -5,6 +5,12 @@ import main.*;
 
 public class ControlAndCollectionSite {
     //private final GeneralRepos repos;
+
+    /**
+     *  Number of thieves which havent come back yet.
+     */
+    private int nThieves;
+
     
     public synchronized void startOperations(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
@@ -17,12 +23,32 @@ public class ControlAndCollectionSite {
         }
 
     }
+    
+    /**
+    *  Operation take a rest.
+    *
+    *  It is called by the MasterThief while waiting for thieves to arrive.
+    *
+    *    @return true, if his life cycle has come to an end -
+    *            false, otherwise
+    */
+    public synchronized boolean takeARest(){
+        while(nThieves == 0){
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                return true;
+            }
+        }
 
-    public static int takeARest(int handACanvas){
-        return 0;
+        if (nThieves>0){
+            nThieves-=1;
+        }
+
+        return false; 
     }    
 
-    public static int handACanvas(int collectACanvas){
+    public static int handACanvas(){
         return 0;
     }    
 

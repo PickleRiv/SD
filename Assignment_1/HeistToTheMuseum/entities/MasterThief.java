@@ -35,42 +35,9 @@ public class MasterThief extends Thread {
     
     @Override
     public void run(){
-        ccSite.startOperations();
-        do{
-
-        }while(true)
+        while(true){
+            if (true)
+                break;
+        }
     }
-}
-  /**
-   *   Life cycle of the barber.
-   */
-
-   @Override
-   public void run ()
-   {
-      int customerId;                                      // customer id
-      boolean endOp;                                       // flag signaling end of operations
-
-      while (true)
-      { endOp = bShop.goToSleep ();                        // the barber sleeps while waiting for a customer to service
-        if (endOp) break;                                  // check for end of operations
-        customerId = bShop.callACustomer ();               // the barber has waken up and calls next customer
-        cutHair ();                                        // the barber cuts the customer hair
-        bShop.receivePayment (customerId);                 // the barber finishes his service and receives payment for it
-      }
-   }
-
-  /**
-   *  Cutting the customer hair.
-   *
-   *  Internal operation.
-   */
-
-   private void cutHair ()
-   {
-      try
-      { sleep ((long) (1 + 100 * Math.random ()));
-      }
-      catch (InterruptedException e) {}
-   }
 }
