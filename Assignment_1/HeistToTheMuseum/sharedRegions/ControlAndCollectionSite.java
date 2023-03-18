@@ -48,11 +48,11 @@ public class ControlAndCollectionSite {
         return false; 
     }    
 
-    public synchronized void handACanvas(){
-        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
+    public synchronized int handACanvas(){
+        return 0;
     }    
 
-    public static int collectACanvas(){
+    public synchronized int collectACanvas(){
         return 0;
     }
 

@@ -9,9 +9,6 @@ public class ConcentrationSite {
         return true;
     }
 
-    public synchronized void prepareAssaultParty(){
-    }
-
     public synchronized void prepareExcursion(){
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
     }
