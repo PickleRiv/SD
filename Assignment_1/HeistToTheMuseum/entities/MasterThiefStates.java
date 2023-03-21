@@ -33,3 +33,4 @@ public class MasterThiefStates {
 	private MasterThiefStates ()
 	{ }
 }
+

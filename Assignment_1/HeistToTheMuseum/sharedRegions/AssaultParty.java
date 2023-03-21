@@ -1,10 +1,9 @@
 package sharedRegions;
 
-import java.util.logging.ErrorManager;
-
+import main.*;
 import commInfra.*;
 import entities.*;
-import main.SimulationParameters;
+
 
 public class AssaultParty {
     
@@ -22,9 +21,9 @@ public class AssaultParty {
             thieves = new MemFIFO<>(new Integer [SimulationParameters.M]);
         }
         catch (MemException e){
-        System.out.println("Instantiation of waiting FIFO failed: " + e.getMessage ());
-        thieves = null;
-        System.exit (1);
+	        System.out.println("Instantiation of waiting FIFO failed: " + e.getMessage ());
+	        thieves = null;
+	        System.exit (1);
       }
     }
 

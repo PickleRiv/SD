@@ -1,4 +1,5 @@
 package entities;
+
 import sharedRegions.*;
 import main.*;
 
@@ -31,8 +32,9 @@ public class OrdinaryThief extends Thread {
      * @param ccSite reference to the Control and Collection Site
 	 */
 
-     public OrdinaryThief(int thiefID, ConcentrationSite conSite, AssaultParty aParty, Museum museum, ControlAndCollectionSite ccSite){
-        this.thiefID =  thiefID;
+     public OrdinaryThief(String name, int thiefID, ConcentrationSite conSite, AssaultParty aParty, Museum museum, ControlAndCollectionSite ccSite){
+        super (name);
+    	this.thiefID =  thiefID;
         this.conSite = conSite;
         this.aParty = aParty;
         this.museum = museum;
@@ -63,7 +65,6 @@ public class OrdinaryThief extends Thread {
             if (conSite.amINeeded())
                 break;
             else{
-                wait();
             }
         }
     }
