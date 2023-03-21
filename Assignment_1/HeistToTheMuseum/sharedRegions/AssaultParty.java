@@ -36,7 +36,7 @@ public class AssaultParty {
         
         try{
             thiefID = thieves.read();
-            if((thiefID < 0) && !(thieves.full()))
+            if((thiefID < 0) || !(thieves.full()))
                 throw new MemException ("illegal thief id!");
         }
         catch (MemException e){
@@ -47,6 +47,8 @@ public class AssaultParty {
     }
 
     public synchronized void crawlIn(){
+    	
+    	System.out.println("One Down");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);
     }    
