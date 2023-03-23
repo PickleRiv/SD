@@ -1,8 +1,6 @@
 package sharedRegions;
 
-import main.SimulationParameters;
-import java.lang.Math;
-import java.util.Random;
+import main.*;
 
 public class Museum {
     
@@ -15,21 +13,23 @@ public class Museum {
     private int lastToRoll;
     
     private boolean carryCanvas;
-
-	private int [] roomDist;
+    
+    private int [] distToRoom;
     
     public Museum() {
-		roomDist = new int [SimulationParameters.N];
+    	distToRoom = new int [SimulationParameters.N];
 
 		// define the range
-        int max = 30;
-        int min = 18;
-        int range = max - min;
+        int maxDist = 30;
+        int minDist = 18;
+        int range = maxDist - minDist;
  
 		for(int i = 0; i < SimulationParameters.N; i++){
-			roomDist[i] = (int)(Math.random() * range) + min;;
+			distToRoom[i] = (int)(Math.random() * range) + minDist;;
 		}
-		System.out.println(roomDist);
+		for(int i =0; i < 3;i++) {
+			System.out.println(distToRoom[i]);
+		}
 		
     	this.canvas = 4;
     	this.firstToArrive = -1;
