@@ -25,16 +25,19 @@ public class ConcentrationSite {
 
 	}
 
+	
     public synchronized boolean amINeeded(){
     	notifyAll();
 		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CONCENTRATION_SITE);
-    	if(numberOfThievesReady < 3 && numberOfThievesUnavailable < 3) {
-    		System.out.println("Im ready!");
-    		numberOfThievesReady += 1;
-    		return false;
-    	}
-    	System.out.println("Joined AP!");
-    	numberOfThievesUnavailable +=1;
+		numberOfThievesReady++;
+
+    	// if(numberOfThievesReady < 3 && numberOfThievesUnavailable < 3) {
+    	// 	System.out.println("Im ready!");
+    	// 	numberOfThievesReady += 1;
+    	// 	return false;
+    	// }
+    	// System.out.println("Joined AP!");
+    	// numberOfThievesUnavailable +=1;
     	return true;
     	}
 

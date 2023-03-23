@@ -1,0 +1,6 @@
+{
+    "java.project.referencedLibraries": [
+        "lib/**/*.jar",
+        "/home/pinto/Documents/Universidade/Semestre2/SD/Pratica/Ass1/genclass.jar"
+    ]
+}
