@@ -32,12 +32,11 @@ public class ConcentrationSite {
     		System.out.println("Im ready!");
     		numberOfThievesReady += 1;
     		return false;
-    	}else {
-    		System.out.println("Joined AP!");
-    		numberOfThievesUnavailable +=1;
-    		return true;
     	}
-    }
+    	System.out.println("Joined AP!");
+    	numberOfThievesUnavailable +=1;
+    	return true;
+    	}
 
     public synchronized void prepareExcursion(){
     	System.out.println("Sneaky beaky like!");

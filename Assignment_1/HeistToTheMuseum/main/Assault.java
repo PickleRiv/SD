@@ -67,6 +67,7 @@ public class Assault {
         }
         
         /* waiting for the end of the simulation */
+        
         //GenericIO.writelnString ();
         for (int i = 0; i < SimulationParameters.M; i++){ 
         	try{
@@ -84,9 +85,10 @@ public class Assault {
         }
         try{
         	master.join ();
+        	System.out.println("Master has been terminated");
         }
         catch (InterruptedException e) {}
-          //GenericIO.writelnString ("The barber " + (i+1) + " has terminated.");#
+        //GenericIO.writelnString ("The barber " + (i+1) + " has terminated.");#
         System.out.println("Master has been terminated");
         }
         //GenericIO.writelnString ();

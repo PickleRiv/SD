@@ -13,6 +13,8 @@ public class OrdinaryThief extends Thread {
      * Thief State
      */
     private int thiefState;
+    
+    private boolean carryCanvas;
 
     /**
      * Reference to shared regions (Museum, AssaultParty, ConcentrationSite, CollectionSite) 
@@ -21,6 +23,7 @@ public class OrdinaryThief extends Thread {
     private final AssaultParty aParty;
     private final Museum museum;
     private final ControlAndCollectionSite ccSite;
+    
 
     /**
 	 * Thief Thread instantiation
@@ -39,6 +42,7 @@ public class OrdinaryThief extends Thread {
         this.aParty = aParty;
         this.museum = museum;
         this.ccSite = ccSite;
+        this.carryCanvas =false;
         thiefState = OrdinaryThiefStates.CONCENTRATION_SITE;
         
      }
@@ -58,14 +62,29 @@ public class OrdinaryThief extends Thread {
     public int getThiefState(){
         return thiefState;
     }
+    
 
     @Override
     public void run(){
-        while(true){
-            if (conSite.amINeeded())
-                break;
-            else{
-            }
-        }
+    	int distance = 0;
+    	while(true) {
+    		if(conSite.amINeeded()) { 			
+    			conSite.prepareExcursion();
+    			while(thiefState == OrdinaryThiefStates.CRAWLING_INWARDS) {
+    				aParty.crawlIn();
+    				if(thiefState == OrdinaryThiefStates.AT_A_ROOM) break;
+    			}
+    			
+    			while(museum.hasCanvas()) {museum.rollACanvas();}
+    			
+    			aParty.reverseDirection();
+    			while(thiefState == OrdinaryThiefStates.CRAWLING_OUTWARDS) {
+    				aParty.crawlOut();
+    				if(thiefState == OrdinaryThiefStates.COLLECTION_SITE) break;
+    			}
+    			ccSite.handACanvas();
+    		}
+    		break;
+    	}
     }
 }

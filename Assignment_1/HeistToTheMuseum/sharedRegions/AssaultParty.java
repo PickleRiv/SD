@@ -48,8 +48,9 @@ public class AssaultParty {
 
     public synchronized void crawlIn(){
     	
-    	System.out.println("One Down");
+    	System.out.println("Going in");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
+        System.out.println("Ive arrived");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);
     }    
 
@@ -57,12 +58,14 @@ public class AssaultParty {
         return 0;
     }    
 
-    public synchronized void CrawlOut(){
+    public synchronized void crawlOut(){
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
+        System.out.println("Ive arrived");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
     }    
 
     public synchronized void reverseDirection(){
+    	System.out.println("Going Out");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
     } 
 }
