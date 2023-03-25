@@ -1,5 +1,6 @@
 package sharedRegions;
-
+import java.util.Enumeration;
+import java.util.Hashtable;
 import main.*;
 
 public class Museum {
@@ -14,22 +15,39 @@ public class Museum {
     
     private boolean carryCanvas;
     
-    private int [] distToRoom;
+ //   private int [][] distToRoom;
+ 	Hashtable<Integer, Integer> roomInfo = new Hashtable<>();
     
     public Museum() {
-    	distToRoom = new int [SimulationParameters.N];
 
-		// define the range
-        int maxDist = 30;
-        int minDist = 18;
-        int range = maxDist - minDist;
- 
+		// define the ranges
+		int maxDist = 30;
+		int minDist = 15;
+		int rangeDist = maxDist - minDist;
+		
+		int maxPaints = 16;
+		int minPaints = 8;
+		int rangePaints = maxPaints - minPaints;
+		
+
 		for(int i = 0; i < SimulationParameters.N; i++){
-			distToRoom[i] = (int)(Math.random() * range) + minDist;;
+			roomInfo.put((int)(Math.random() * rangeDist) + minDist, (int)(Math.random() * rangePaints) + minPaints);
 		}
-		for(int i =0; i < 3;i++) {
-			System.out.println(distToRoom[i]);
-		}
+		System.out.println(roomInfo);
+		
+    	//distToRoom = new int [SimulationParameters.N];
+
+		// // define the range
+        // int maxDist = 30;
+        // int minDist = 15;
+        // int rangeDist = maxDist - minDist;
+ 
+		// for(int i = 0; i < SimulationParameters.N; i++){
+		// 	distToRoom[i] = (int)(Math.random() * rangeDist) + minDist;
+		// }
+		// for(int i =0; i < 3;i++) {
+		// 	System.out.println(distToRoom[i]);
+		// }
 		
     	this.canvas = 4;
     	this.firstToArrive = -1;
