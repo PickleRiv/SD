@@ -30,6 +30,13 @@ public class ConcentrationSite {
     	notifyAll();
 		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CONCENTRATION_SITE);
 		numberOfThievesReady++;
+		
+		// !!
+		try {
+			wait();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}   
 
     	// if(numberOfThievesReady < 3 && numberOfThievesUnavailable < 3) {
     	// 	System.out.println("Im ready!");

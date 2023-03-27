@@ -50,6 +50,8 @@ public class AssaultParty {
     	
     	System.out.println("Going in");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
+
+        // if() 
         System.out.println("Ive arrived");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);
     }    
@@ -62,6 +64,15 @@ public class AssaultParty {
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
         System.out.println("Ive arrived");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
+
+        while(){ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+            try {
+            wait();
+            } 
+            catch (InterruptedException e) {
+            e.printStackTrace();
+            }   
+        }
     }    
 
     public synchronized void reverseDirection(){
