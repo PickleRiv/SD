@@ -23,6 +23,7 @@ public class OrdinaryThief extends Thread {
     private final AssaultParty aParty;
     private final Museum museum;
     private final ControlAndCollectionSite ccSite;
+    private int maxDisp;
     
 
     /**
@@ -38,6 +39,7 @@ public class OrdinaryThief extends Thread {
      public OrdinaryThief(String name, int thiefID, ConcentrationSite conSite, AssaultParty aParty, Museum museum, ControlAndCollectionSite ccSite){
         super (name);
     	this.thiefID =  thiefID;
+    	this.maxDisp = (int) (2 + (Math.random() * (5 - 2)));
         this.conSite = conSite;
         this.aParty = aParty;
         this.museum = museum;
@@ -66,17 +68,18 @@ public class OrdinaryThief extends Thread {
 
     @Override
     public void run(){
-    	int distance = 0;
     	while(true) {
     		if(conSite.amINeeded()) { 			
-    			conSite.prepareExcursion();
-    			while(thiefState == OrdinaryThiefStates.CRAWLING_INWARDS) {
-    				aParty.crawlIn();
-    				if(thiefState == OrdinaryThiefStates.AT_A_ROOM) break;
-    			}
-    			
+	    		conSite.prepareExcursion();
+				//int distToRoom = museum.getDistRoom();
+				try {
+					aParty.crawlIn(thiefID,maxDisp,30);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					System.out.println("oopsiepoopsie");
+					e.printStackTrace();
+				}
     			while(museum.hasCanvas()) {museum.rollACanvas();}
-    			
     			aParty.reverseDirection();
     			while(thiefState == OrdinaryThiefStates.CRAWLING_OUTWARDS) {
     				aParty.crawlOut();

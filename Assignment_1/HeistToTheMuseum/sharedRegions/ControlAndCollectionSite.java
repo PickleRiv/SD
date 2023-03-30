@@ -2,15 +2,21 @@ package sharedRegions;
 
 import entities.*;
 import main.*;
+import commInfra.*;
 
 public class ControlAndCollectionSite {
     //private final GeneralRepos repos;
-
+    
     /**
-     *  Number of thieves which havent come back yet.
-     */
-    private int nThieves;
-
+	 * Queue of pending Requests
+	 */
+	private MemFIFO<Integer> thiefQueue;
+	
+	private int nThieves;
+	
+	public ControlAndCollectionSite() {
+		
+	}
     
     public synchronized void startOperations(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
@@ -46,7 +52,20 @@ public class ControlAndCollectionSite {
         }
 
         return false; 
-    }    
+    }
+    
+    
+    public synchronized void appraiseSit() {
+    	while(true) {
+    		try{
+    			System.out.println("Master is waiting");
+                wait();
+            } catch(InterruptedException e){
+                e.printStackTrace();
+            }	
+    	}
+    }
+    		
 
     public synchronized int handACanvas(){
         return 0;

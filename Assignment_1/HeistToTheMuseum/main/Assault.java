@@ -51,19 +51,28 @@ public class Assault {
         System.out.println("Master Created");
         
         //initialisation of thieves
-        for (int i = 0; i < SimulationParameters.M; i++){
+//        for (int i = 0; i < SimulationParameters.M; i++){
+//        	thief[i] = new OrdinaryThief ("Thief_" + (i+1),i,conSite, aParty, museum ,ccSite);
+//        	System.out.println("Thief_" + i + "Created");
+//        }
+        for (int i = 0; i < 3; i++){
         	thief[i] = new OrdinaryThief ("Thief_" + (i+1),i,conSite, aParty, museum ,ccSite);
-        	System.out.println("Thief_" + i + "Created");
+       		System.out.println("Thief_" + i + "Created");
         }
+        
 
         
         System.out.println("Start of simulation.");
         
         master.start();
         System.out.println("Master Started");
-        for (int i = 0; i < SimulationParameters.M;i++) {
+//        for (int i = 0; i < SimulationParameters.M;i++) {
+//        	thief[i].start();
+//        	System.out.println("Thief_"+ i +" Started");
+//        }
+        for (int i = 0; i < 3;i++) {
         	thief[i].start();
-        	System.out.println("Thief"+ i +"Started");
+        	System.out.println("Thief_"+ i +" Started");
         }
         
         /* waiting for the end of the simulation */
@@ -85,7 +94,6 @@ public class Assault {
         }
         try{
         	master.join ();
-        	System.out.println("Master has been terminated");
         }
         catch (InterruptedException e) {}
         //GenericIO.writelnString ("The barber " + (i+1) + " has terminated.");#

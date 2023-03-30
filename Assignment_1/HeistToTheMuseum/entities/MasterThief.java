@@ -24,43 +24,66 @@ public class MasterThief extends Thread {
         this.aParty = aParty;
         this.conSite = conSite;
     }
-
-    public void setMasterID (int id){
-        masterID = id;
+    
+    public void setMasterID(int ID){
+        masterID = ID;
     }
-
+    
     public int getMasterID(){
         return masterID;
     }
-
+    
+    /**
+	 * 
+	 * @param masterState new state to be set
+	 */
     public void setMasterState(int state){
         masterState = state;
     }
 
+    /**
+	 * 	@return masterState
+	 */
     public int getMasterState(){
         return masterState;
     }
     
     @Override
     public void run(){
-
-        ccSite.startOperations();
-
-        while(true){
-            int i = 0;
-            if (i == 1){ //  se os ladroes tiverem todos no ConSite e salas todas vazias
-                conSite.sumUpResults();
-                break;
-            }
-            else if (i == 20000){ // se arrays ou fifo cheios???
-                aParty.prepareAssaultParty();
-                aParty.sendAssaultParty();
-            }
-            else{
-                ccSite.takeARest();
-                ccSite.collectACanvas();
-            }
-
-        }
+    	while(true) {
+            ccSite.startOperations();
+            ccSite.appraiseSit();
+            //conSite.
+    	}
+        	
     }
 }
+
+
+////switch(masterState) {
+////case MasterThiefStates.DECIDING_WHAT_TO_DO:
+////System.out.println("Master is deciding what to do");
+////appraiseSit();
+////break;
+////case MasterThiefStates.ASSEMBLING_A_GROUP:
+////}
+//int i = 0;
+//if (i == 1){ //  se os ladroes tiverem todos no ConSite e salas todas vazias
+//
+//System.out.println("oi");
+//conSite.sumUpResults();
+//i++;
+//break;
+//
+//}
+//else if (i == 100){ // se arrays ou fifo cheios???
+//System.out.println("hello");
+//
+//aParty.prepareAssaultParty();
+//aParty.sendAssaultParty();
+//i++;
+//}
+//else{
+//ccSite.takeARest();
+//ccSite.collectACanvas();
+//

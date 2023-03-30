@@ -1,6 +1,11 @@
 package sharedRegions;
 
 import main.*;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
+
 import commInfra.*;
 import entities.*;
 
@@ -9,6 +14,8 @@ public class AssaultParty {
     
     private final AssaultParty [] AP;
     private MemFIFO<Integer> thieves;
+    public int inPartyPos;
+    public int [] positions;
 
     public AssaultParty(){
 
@@ -46,15 +53,60 @@ public class AssaultParty {
         }   
     }
 
-    public synchronized void crawlIn(){
-    	
-    	System.out.println("Going in");
+    public synchronized void crawlIn(int thiefID, int maxDistance, int distanceToRoom) throws InterruptedException {
+        thiefID = ((OrdinaryThief) Thread.currentThread()).getThiefID();
+        System.out.println("Going in");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
 
-        // if() 
-        System.out.println("Ive arrived");
+        // initialize position map
+        Map<Integer, Integer> positionMap = new HashMap<>();
+        positionMap.put(thiefID, 0);
+
+        while (true) {
+            boolean allThievesReachedRoom = true;
+            for (int otherID : positionMap.keySet()) {
+                if (positionMap.get(otherID) < distanceToRoom) {
+                    allThievesReachedRoom = false;
+                    break;
+                }
+            }
+            if (allThievesReachedRoom) {
+                break;
+            }
+
+            // calculate distance
+            int distance = ThreadLocalRandom.current().nextInt(1, Math.min(maxDistance, distanceToRoom) + 1);
+
+            // move the thief based on the distance
+            int currentPosition = positionMap.get(thiefID);
+            int newPosition = Math.min(currentPosition + distance, distanceToRoom);
+
+            // check for collisions with other thieves
+            boolean collision = false;
+            for (int otherID : positionMap.keySet()) {
+                if (otherID != thiefID && Math.abs(positionMap.get(otherID) - newPosition) <= 1) {
+                    System.out.println("collided");
+                    collision = true;
+                    break;
+                }
+            }
+
+            // move the thief if there are no collisions
+            if (!collision) {
+                positionMap.put(thiefID, newPosition);
+                System.out.println("Thief_" + ((OrdinaryThief) Thread.currentThread()).getThiefID() + " " + newPosition);
+            } else {
+                // wait if there are collisions
+                System.out.println("Thief_" + ((OrdinaryThief) Thread.currentThread()).getThiefID() + " is crawling ");
+                wait();
+            }
+        }
+
+        // update state of thief if in room
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);
-    }    
+        notifyAll();
+    }
+
 
     public synchronized int sendAssaultParty(){
         return 0;
@@ -65,12 +117,13 @@ public class AssaultParty {
         System.out.println("Ive arrived");
         ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
 
-        while(){ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
+        while(true){ // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!11
             try {
-            wait();
+            	System.out.println("Im waitting");
+            	wait();
             } 
             catch (InterruptedException e) {
-            e.printStackTrace();
+            	e.printStackTrace();
             }   
         }
     }    

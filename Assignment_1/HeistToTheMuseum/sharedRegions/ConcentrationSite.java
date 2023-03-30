@@ -22,22 +22,25 @@ public class ConcentrationSite {
 	{
 		this.numberOfThievesReady = 0;
 		this.numberOfThievesUnavailable = 0;
+		
 
 	}
 
 	
     public synchronized boolean amINeeded(){
-    	notifyAll();
 		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CONCENTRATION_SITE);
 		numberOfThievesReady++;
-		
+		notifyAll();
 		// !!
-		try {
-			wait();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}   
-
+//		while(true) {
+//			try {
+//				System.out.println("Thief_"  + ((OrdinaryThief) Thread.currentThread()).getThiefID() + " is Waiting ");
+//				wait();
+//			} catch (InterruptedException e) {
+//				e.printStackTrace();
+//				break;
+//			} 
+//		}
     	// if(numberOfThievesReady < 3 && numberOfThievesUnavailable < 3) {
     	// 	System.out.println("Im ready!");
     	// 	numberOfThievesReady += 1;
