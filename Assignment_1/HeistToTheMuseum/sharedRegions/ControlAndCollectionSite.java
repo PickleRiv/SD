@@ -29,7 +29,6 @@ public class ControlAndCollectionSite {
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.WAITING_FOR_ARRIVAL);
     }
     
-    		
 
     public synchronized int handACanvas(){
         return 0;

@@ -1,5 +1,6 @@
 package entities;
 
+import main.SimulationParameters;
 import sharedRegions.*;
 
 public class MasterThief extends Thread {
@@ -7,6 +8,10 @@ public class MasterThief extends Thread {
     private int masterState;						//	Master Thief State 
     private final ControlAndCollectionSite ccSite;	//	Reference to the Collection Site
     private final ConcentrationSite conSite;		//	Reference to the Concentration Site
+    private final AssaultParty [] aParty;			//	Reference to the Concentration Site
+    private int [] partiesSent;
+    private final Museum museum;
+
     
     /**
      *   Instantiation of a barber thread.
@@ -15,12 +20,15 @@ public class MasterThief extends Thread {
      *     @param masterID master thief id
      *     @param ccSite Reference to the Collection Site
      */
-    public MasterThief(String name, int masterID, ControlAndCollectionSite ccSite,ConcentrationSite conSite){
+    public MasterThief(String name, int masterID, ControlAndCollectionSite ccSite,ConcentrationSite conSite, AssaultParty [] aParty, Museum museum){
         super(name);
     	this.masterID = masterID;
         masterState = MasterThiefStates.PLANNING_THE_HEIST;
         this.ccSite = ccSite;
         this.conSite = conSite;
+        this.aParty = aParty;
+        this.museum = museum;
+        partiesSent = new int [SimulationParameters.G];
     }
     
     public void setMasterID(int ID){
@@ -49,24 +57,29 @@ public class MasterThief extends Thread {
     @Override
     public void run(){
 		ccSite.startOperations();                       					// state changes from planning the heist
-
+		int currentParty=-1;
     	while(true) {
             switch(masterState) {
             case 1:                                         				// Deciding what to do
-        		if (!conSite.isSent()) {
-                	conSite.appraiseSit();									// state changes to deciding what to do
+            	if(museum.getAvailableRoom()==-2) {
+        			ccSite.sumUpResults();
+        			break;
         		}
-            	if (conSite.partyFullIndex()!=-1) {
-            		conSite.prepareAssaultParty();							// state changes to Assembling a group
-            	} 
-            	// if parties sent >2 && rooms != empty:
-            	if(!conSite.isLooted() && conSite.isSent() && conSite.partyFullIndex()==-1) 
-            		ccSite.takeARest();
-            	if(conSite.isLooted()) 
-            		ccSite.sumUpResults();
+            	if(conSite.isBusy() || museum.numAvail()<SimulationParameters.G) {
+        			ccSite.takeARest();
+        			break;
+        		}
+            	currentParty = conSite.appraiseSit();										// state changes to deciding what to do
+            	conSite.prepareAssaultParty();								// state changes to Assembling a group
             	break;
             case 2:                                         				// Assembling a group
-            	conSite.sendAssaultParty();
+            	System.out.println(currentParty);
+            	int availableRoom = museum.getAvailableRoom();
+            	if (availableRoom != -2 || availableRoom != -1) {
+                	conSite.sendAssaultParty(museum.getAvailableRoom());
+                	partiesSent[currentParty]++;
+                	currentParty=-1;
+            	}
             	break;
             case 3:                                         				// waitting for arrival
             	//if party == arrived:

@@ -7,24 +7,19 @@ import sharedRegions.*;
  * Simulation of the Museum Heist
  */
 public class Assault {
-	
-    public static void main(String[] args){
-        MasterThief master;
-        OrdinaryThief [] thief = new OrdinaryThief[SimulationParameters.M];
-        AssaultParty aParty1;
-        AssaultParty aParty2;
-        ConcentrationSite conSite;
-        ControlAndCollectionSite ccSite;
-        Museum museum;
-        int [] roomsDist = new int [SimulationParameters.N];
-        int [] roomsPaints = new int [SimulationParameters.N];
-    	int [] availableRooms = new int [SimulationParameters.N];
-        GeneralRepos repos;
-        char opt;                                            // selected option
-        boolean success;                                     // end of operation flag
-        int nIter;
-        String fileName;
-        
+
+	public static void main(String[] args) {
+		MasterThief master;
+		OrdinaryThief[] thief = new OrdinaryThief[SimulationParameters.M];
+		AssaultParty[] aParty = new AssaultParty[SimulationParameters.G];
+		ConcentrationSite conSite;
+		ControlAndCollectionSite ccSite;
+		Museum museum;
+		int[][] rooms = new int[SimulationParameters.N][4]; // roomsDistance, roomsCanvas,Availability
+		int maxDisp;
+		GeneralRepos repos;
+		String fileName;
+
 //        /* problem initialization */
 //        GenericIO.writelnString ("\n" + "      Problem of the Sleeping Barbers\n");
 //        GenericIO.writeString ("Number of iterations of the customer life cycle? ");
@@ -45,67 +40,76 @@ public class Assault {
 //        } while (!success);
 //        repos = new GeneralRepos (fileName, nIter);
 //        bShop = new BarberShop (repos);
-        for (int i = 0; i < SimulationParameters.N; i++) {
-        	roomsDist[i] = (int)(Math.random() * 30) + 15;
-        	roomsPaints[i] = (int)(Math.random() * 16) + 8;
-        	availableRooms[i] = 1;
+		for (int[] room : rooms) {
+			room[0] = (int) (Math.random() * (SimulationParameters.maxDist - SimulationParameters.minDist))
+					+ SimulationParameters.minDist;
+			room[1] = (int) (Math.random() * (SimulationParameters.maxCanvas - SimulationParameters.minCanvas))
+					+ SimulationParameters.minCanvas;
+			room[2] = 1;
+			room[3] = 0;
+		}
 
-        }
-        
-        conSite = new ConcentrationSite (SimulationParameters.M,SimulationParameters.K,availableRooms);
-        ccSite = new ControlAndCollectionSite ();
-        aParty1 = new AssaultParty (0,roomsDist);
-        aParty2 = new AssaultParty (1,roomsDist);
-        museum = new Museum (roomsPaints);
-        
-        //initialisation of master
-        master = new MasterThief ("Master", 1, ccSite, conSite);
-        System.out.println("Master Created");
-        
-        //initialisation of thieves
-        for (int i = 0; i < SimulationParameters.M; i++){
-        	if (i<3){
-        		thief[i] = new OrdinaryThief ("Thief_" + (i+1),i,conSite, aParty1 , museum ,ccSite);
-            	System.out.println("Thief_" + i + "Created");
-        	}else {
-        		thief[i] = new OrdinaryThief ("Thief_" + (i+1),i,conSite, aParty2 , museum ,ccSite);
-        		System.out.println("Thief_" + i + "Created");
-        	}
-        }
-        
-        System.out.println("Start of simulation.");
-        
-        master.start();
-        System.out.println("Master Started");
-        for (int i = 0; i < SimulationParameters.M;i++) {
-        	thief[i].start();
-        	System.out.println("Thief_"+ i +" Started");
-        }
-        
-        /* waiting for the end of the simulation */
-        
-        //GenericIO.writelnString ();
-        for (int i = 0; i < SimulationParameters.M; i++){ 
-        	try{
-        		thief[i].join ();
-        		System.out.println("Thief_" + i + " terminated");
-        	}
-        	catch (InterruptedException e) {}
-          //GenericIO.writelnString ("The customer " + (i+1) + " has terminated.");
-        }
-        
-        //GenericIO.writelnString ();
-        while (master.isAlive ()){
-        	master.interrupt ();
-            Thread.yield ();
-        }
-        try{
-        	master.join ();
-        }
-        catch (InterruptedException e) {}
-        //GenericIO.writelnString ("The barber " + (i+1) + " has terminated.");#
-        System.out.println("Master has been terminated");
-        }
-        //GenericIO.writelnString ();
+		for (int[] room : rooms) {
+			System.out.println("roomDist: " + room[0] + " #Canvas: " + room[1] + " Available: " + room[2]
+					+ " isLooted: " + room[3]);
+		}
+		for (int i = 0; i < aParty.length; i++) {
+			aParty[i] = new AssaultParty(i);
+
+		}
+		conSite = new ConcentrationSite();
+		ccSite = new ControlAndCollectionSite();
+		museum = new Museum(rooms);
+
+		// initialisation of master
+		master = new MasterThief("Master", 1, ccSite, conSite, aParty, museum);
+		System.out.println("Master Created");
+
+		// initialisation of thieves
+		for (int i = 0; i < SimulationParameters.M; i++) {
+			maxDisp = (int) (Math.random() * (SimulationParameters.maxDisp - SimulationParameters.minDisp))
+					+ SimulationParameters.minDisp;
+			if (i < 3) {
+				thief[i] = new OrdinaryThief("Thief_" + (i + 1), i, conSite, aParty[0], museum, ccSite, maxDisp);
+				System.out.println("Thief_" + i + "Created");
+			} else {
+				thief[i] = new OrdinaryThief("Thief_" + (i + 1), i, conSite, aParty[1], museum, ccSite, maxDisp);
+				System.out.println("Thief_" + i + "Created");
+			}
+		}
+
+		System.out.println("Start of simulation.");
+
+		master.start();
+		System.out.println("Master Started");
+		for (int i = 0; i < SimulationParameters.M; i++) {
+			thief[i].start();
+			System.out.println("Thief_" + i + " Started");
+		}
+
+		/* waiting for the end of the simulation */
+
+		// GenericIO.writelnString ();
+		for (int i = 0; i < SimulationParameters.M; i++) {
+			try {
+				thief[i].join();
+				System.out.println("Thief_" + i + " terminated");
+			} catch (InterruptedException e) {
+			}
+			// GenericIO.writelnString ("The customer " + (i+1) + " has terminated.");
+		}
+
+		// GenericIO.writelnString ();
+		while (master.isAlive()) {
+			master.interrupt();
+			Thread.yield();
+		}
+		try {
+			master.join();
+		} catch (InterruptedException e) {
+		}
+		// GenericIO.writelnString ("The barber " + (i+1) + " has terminated.");#
+		System.out.println("Master has been terminated");
+	}
+	// GenericIO.writelnString ();
 }
-    

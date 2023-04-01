@@ -15,6 +15,7 @@ public class OrdinaryThief extends Thread {
     private int thiefState;
     
     private boolean carryCanvas;
+    private int targetRoom;
 
     /**
      * Reference to shared regions (Museum, AssaultParty, ConcentrationSite, CollectionSite) 
@@ -36,15 +37,16 @@ public class OrdinaryThief extends Thread {
      * @param ccSite reference to the Control and Collection Site
 	 */
 
-     public OrdinaryThief(String name, int thiefID, ConcentrationSite conSite, AssaultParty aParty, Museum museum, ControlAndCollectionSite ccSite){
+     public OrdinaryThief(String name, int thiefID, ConcentrationSite conSite, AssaultParty aParty, Museum museum, ControlAndCollectionSite ccSite, int maxDisp){
         super (name);
     	this.thiefID =  thiefID;
-    	this.maxDisp = (int) (2 + (Math.random() * (5 - 2)));
+    	this.maxDisp = maxDisp;
         this.conSite = conSite;
         this.aParty = aParty;
         this.museum = museum;
         this.ccSite = ccSite;
         this.carryCanvas =false;
+        targetRoom = -1;
         thiefState = OrdinaryThiefStates.CONCENTRATION_SITE;
         
      }
@@ -65,6 +67,10 @@ public class OrdinaryThief extends Thread {
         return thiefState;
     }
     
+    public int getThiefPartyID() {
+    	return aParty.getPartyID();
+    }
+    
 
     @Override
     public void run(){
@@ -72,13 +78,16 @@ public class OrdinaryThief extends Thread {
     		switch(thiefState) {
     		case 0:                                         // Concentration Site
             	// if not in party
-    			int assignedRoom = conSite.amINeeded(thiefID);
-            	// when in party
-            	conSite.prepareExcursion();
+    			if(targetRoom==-1) {
+    				conSite.amINeeded(thiefID);
+    			}else {
+                	targetRoom = conSite.prepareExcursion(thiefID);
+
+    			}
             	break;
             case 1:                                         // Crawling inwards
             	// until in room
-            	aParty.crawlIn(thiefID);
+            	aParty.crawlIn(thiefID,maxDisp);
             	// if in room change state
             	break;
             case 2:                                         // At a room
@@ -90,14 +99,14 @@ public class OrdinaryThief extends Thread {
             	break;
             case 3:                                         // Crawling outwards
             	// until at site
-            	aParty.crawlOut(thiefID);
+            	aParty.crawlOut(thiefID, maxDisp);
             	// if on site change state
             	break;
             case 4:											// Collection site
             	// if has canvas
             	ccSite.handACanvas();
             	// if no canvas
-            	conSite.amINeeded(thiefID);
+    			conSite.amINeeded(thiefID);
             	break;
           }
     		}
