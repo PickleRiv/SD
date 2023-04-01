@@ -77,13 +77,9 @@ public class OrdinaryThief extends Thread {
     	while(true) {
     		switch(thiefState) {
     		case 0:                                         // Concentration Site
-            	// if not in party
-    			if(targetRoom==-1) {
-    				conSite.amINeeded(thiefID);
-    			}else {
-                	targetRoom = conSite.prepareExcursion(thiefID);
-
-    			}
+    			conSite.amINeeded(thiefID);
+                targetRoom = conSite.prepareExcursion(thiefID);
+    			System.out.println("crawling");
             	break;
             case 1:                                         // Crawling inwards
             	// until in room

@@ -73,10 +73,9 @@ public class MasterThief extends Thread {
             	conSite.prepareAssaultParty();								// state changes to Assembling a group
             	break;
             case 2:                                         				// Assembling a group
-            	System.out.println(currentParty);
             	int availableRoom = museum.getAvailableRoom();
             	if (availableRoom != -2 || availableRoom != -1) {
-                	conSite.sendAssaultParty(museum.getAvailableRoom());
+                	conSite.sendAssaultParty(museum.getAvailableRoom());				// state changes to deciding what to do
                 	partiesSent[currentParty]++;
                 	currentParty=-1;
             	}
