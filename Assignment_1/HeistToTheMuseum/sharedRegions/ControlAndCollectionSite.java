@@ -6,28 +6,15 @@ import commInfra.*;
 
 public class ControlAndCollectionSite {
     //private final GeneralRepos repos;
-    
-    /**
-	 * Queue of pending Requests
-	 */
-	private MemFIFO<Integer> thiefQueue;
-	
-	private int nThieves;
-	
+    	
 	public ControlAndCollectionSite() {
 		
 	}
     
     public synchronized void startOperations(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
+        //System.out.println("Master is deciding what to do");
         //repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
-
-        try{
-            wait();
-        } catch(InterruptedException e){
-            e.printStackTrace();
-        }
-
     }
     
     /**
@@ -38,33 +25,10 @@ public class ControlAndCollectionSite {
     *    @return true, if his life cycle has come to an end -
     *            false, otherwise
     */
-    public synchronized boolean takeARest(){
-        while(nThieves == 0){
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                return true;
-            }
-        }
-
-        if (nThieves>0){
-            nThieves-=1;
-        }
-
-        return false; 
+    public synchronized void takeARest(){
+        ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.WAITING_FOR_ARRIVAL);
     }
     
-    
-    public synchronized void appraiseSit() {
-    	while(true) {
-    		try{
-    			System.out.println("Master is waiting");
-                wait();
-            } catch(InterruptedException e){
-                e.printStackTrace();
-            }	
-    	}
-    }
     		
 
     public synchronized int handACanvas(){
@@ -73,6 +37,10 @@ public class ControlAndCollectionSite {
 
     public synchronized int collectACanvas(){
         return 0;
+    }
+    
+    public synchronized void sumUpResults(){
+        
     }
 
 }

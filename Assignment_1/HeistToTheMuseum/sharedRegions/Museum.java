@@ -4,8 +4,6 @@ import main.*;
 
 public class Museum {
     
-    private int canvas;
-    
     private int firstToArrive;
     
     private int lastToArrive;
@@ -13,25 +11,11 @@ public class Museum {
     private int lastToRoll;
     
     private boolean carryCanvas;
+    private int [] roomsPaints;
     
-    private int [] distToRoom;
-    
-    public Museum() {
-    	distToRoom = new int [SimulationParameters.N];
-
-		// define the range
-        int maxDist = 30;
-        int minDist = 18;
-        int range = maxDist - minDist;
- 
-		for(int i = 0; i < SimulationParameters.N; i++){
-			distToRoom[i] = (int)(Math.random() * range) + minDist;;
-		}
-		for(int i =0; i < 3;i++) {
-			System.out.println(distToRoom[i]);
-		}
+    public Museum(int [] roomsPaints) {
+    	this.roomsPaints = roomsPaints;
 		
-    	this.canvas = 4;
     	this.firstToArrive = -1;
     	this.lastToArrive = -1;
     	this.lastToRoll = -1;
@@ -62,7 +46,6 @@ public class Museum {
 	 */
 	public void setLastToRoll(int lastToRoll) {this.lastToRoll = lastToRoll;}
 	
-	public int getDistRoom() {return distToRoom[0];}
     
 	/**
 	 * Operation to roll a canvas
@@ -72,27 +55,21 @@ public class Museum {
 	 * Thief waits if is carrying a canvas and if it was not the last to roll one
 	 */
 	public synchronized void rollACanvas(){
-		if(lastToArrive > -1 && !this.carryCanvas) {
-			canvas -= 1;
-			this.carryCanvas = true;
-			notifyAll();
-			System.out.println("I've taken a Canvas");
-		}
-
-		while(this.carryCanvas || lastToArrive == -1) {
-			try {
-				System.out.println("I'm waiting");
-				wait();
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}    
-		}
+//		if(lastToArrive > -1 && !this.carryCanvas) {
+//			canvas -= 1;
+//			this.carryCanvas = true;
+//			notifyAll();
+//			System.out.println("I've taken a Canvas");
+//		}
+//
+//		while(this.carryCanvas || lastToArrive == -1) {
+//			try {
+//				System.out.println("I'm waiting");
+//				wait();
+//			} catch (InterruptedException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}    
+//		}
     }
-	
-	/**
-	 * Obtain availability of canvas in the room
-	 * @return true if there are canvas or false if there aren't any
-	 */
-	public boolean hasCanvas() {return canvas > 0 ? true : false;}
 }

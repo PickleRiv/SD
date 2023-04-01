@@ -6,7 +6,6 @@ public class MasterThief extends Thread {
     private int masterID;							//	Master Thief Identification
     private int masterState;						//	Master Thief State 
     private final ControlAndCollectionSite ccSite;	//	Reference to the Collection Site
-    private final AssaultParty aParty;				//	Reference to the Assault Party
     private final ConcentrationSite conSite;		//	Reference to the Concentration Site
     
     /**
@@ -16,12 +15,11 @@ public class MasterThief extends Thread {
      *     @param masterID master thief id
      *     @param ccSite Reference to the Collection Site
      */
-    public MasterThief(String name, int masterID, ControlAndCollectionSite ccSite, AssaultParty aParty,ConcentrationSite conSite){
+    public MasterThief(String name, int masterID, ControlAndCollectionSite ccSite,ConcentrationSite conSite){
         super(name);
     	this.masterID = masterID;
         masterState = MasterThiefStates.PLANNING_THE_HEIST;
         this.ccSite = ccSite;
-        this.aParty = aParty;
         this.conSite = conSite;
     }
     
@@ -50,40 +48,35 @@ public class MasterThief extends Thread {
     
     @Override
     public void run(){
+		ccSite.startOperations();                       					// state changes from planning the heist
+
     	while(true) {
-            ccSite.startOperations();
-            ccSite.appraiseSit();
-            //conSite.
+            switch(masterState) {
+            case 1:                                         				// Deciding what to do
+        		if (!conSite.isSent()) {
+                	conSite.appraiseSit();									// state changes to deciding what to do
+        		}
+            	if (conSite.partyFullIndex()!=-1) {
+            		conSite.prepareAssaultParty();							// state changes to Assembling a group
+            	} 
+            	// if parties sent >2 && rooms != empty:
+            	if(!conSite.isLooted() && conSite.isSent() && conSite.partyFullIndex()==-1) 
+            		ccSite.takeARest();
+            	if(conSite.isLooted()) 
+            		ccSite.sumUpResults();
+            	break;
+            case 2:                                         				// Assembling a group
+            	conSite.sendAssaultParty();
+            	break;
+            case 3:                                         				// waitting for arrival
+            	//if party == arrived:
+            	ccSite.collectACanvas();
+            	break;
+            case 4:															// Presenting the report
+            	//print out the end of the loop
+            	break;
+          }
     	}
         	
     }
 }
-
-
-////switch(masterState) {
-////case MasterThiefStates.DECIDING_WHAT_TO_DO:
-////System.out.println("Master is deciding what to do");
-////appraiseSit();
-////break;
-////case MasterThiefStates.ASSEMBLING_A_GROUP:
-////}
-//int i = 0;
-//if (i == 1){ //  se os ladroes tiverem todos no ConSite e salas todas vazias
-//
-//System.out.println("oi");
-//conSite.sumUpResults();
-//i++;
-//break;
-//
-//}
-//else if (i == 100){ // se arrays ou fifo cheios???
-//System.out.println("hello");
-//
-//aParty.prepareAssaultParty();
-//aParty.sendAssaultParty();
-//i++;
-//}
-//else{
-//ccSite.takeARest();
-//ccSite.collectACanvas();
-//

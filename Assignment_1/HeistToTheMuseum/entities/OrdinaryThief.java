@@ -69,25 +69,37 @@ public class OrdinaryThief extends Thread {
     @Override
     public void run(){
     	while(true) {
-    		if(conSite.amINeeded()) { 			
-	    		conSite.prepareExcursion();
-				//int distToRoom = museum.getDistRoom();
-				try {
-					aParty.crawlIn(thiefID,maxDisp,30);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					System.out.println("oopsiepoopsie");
-					e.printStackTrace();
-				}
-    			while(museum.hasCanvas()) {museum.rollACanvas();}
-    			aParty.reverseDirection();
-    			while(thiefState == OrdinaryThiefStates.CRAWLING_OUTWARDS) {
-    				aParty.crawlOut();
-    				if(thiefState == OrdinaryThiefStates.COLLECTION_SITE) break;
-    			}
-    			ccSite.handACanvas();
+    		switch(thiefState) {
+    		case 0:                                         // Concentration Site
+            	// if not in party
+    			int assignedRoom = conSite.amINeeded(thiefID);
+            	// when in party
+            	conSite.prepareExcursion();
+            	break;
+            case 1:                                         // Crawling inwards
+            	// until in room
+            	aParty.crawlIn(thiefID);
+            	// if in room change state
+            	break;
+            case 2:                                         // At a room
+            	// if no canvas && canvas available
+            	museum.rollACanvas();
+            	// if canvas or room empty and not last wait()
+            	// if canvas or room empty and last
+            	aParty.reverseDirection(thiefID);
+            	break;
+            case 3:                                         // Crawling outwards
+            	// until at site
+            	aParty.crawlOut(thiefID);
+            	// if on site change state
+            	break;
+            case 4:											// Collection site
+            	// if has canvas
+            	ccSite.handACanvas();
+            	// if no canvas
+            	conSite.amINeeded(thiefID);
+            	break;
+          }
     		}
-    		break;
     	}
     }
-}
