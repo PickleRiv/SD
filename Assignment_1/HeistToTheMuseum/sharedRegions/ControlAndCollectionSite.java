@@ -8,16 +8,13 @@ import commInfra.*;
 
 public class ControlAndCollectionSite {
 	
-    private final GeneralRepos repos;	
 	public ControlAndCollectionSite() {
-		this.repos = null;
 		
 	}
     
     public synchronized void startOperations(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
         //System.out.println("Master is deciding what to do");
-        repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
     }
     
     /**
@@ -30,7 +27,15 @@ public class ControlAndCollectionSite {
     */
     public synchronized void takeARest(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.WAITING_FOR_ARRIVAL);
-        repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
+    
+        while(true) {
+        	try {
+        		System.out.println("Master is waiting");
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
     }
     
 
