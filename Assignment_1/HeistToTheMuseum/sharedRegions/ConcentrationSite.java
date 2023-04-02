@@ -2,6 +2,7 @@ package sharedRegions;
 
 import entities.*;
 import main.SimulationParameters;
+import genclass.GenericIO;
 
 public class ConcentrationSite {
 
@@ -27,7 +28,10 @@ public class ConcentrationSite {
 		masterBool = false;
 		currentParty = -1;
 		targettedRoom = -1;
-
+		
+		
+		
+		
 		// Initialisation of students thread
 		thieves = new OrdinaryThief[SimulationParameters.M];
 		for (int i = 0; i < SimulationParameters.M; i++)
@@ -41,10 +45,12 @@ public class ConcentrationSite {
 		System.out.println("Thief_" + thiefID + " joined Party_" + thieves[thiefID].getThiefPartyID());
 		parties[partyID]++;
 		notifyAll();
-		while (!masterBool && partyID != currentParty) {
+		while (!masterBool || partyID != currentParty) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
+				GenericIO.writelnString ("YUPPPPPPPPPPPPPPPPPPPPPPPPPp: " + e.getMessage ());
+		        System.exit (1);
 				e.printStackTrace();
 			}
 		}
@@ -95,6 +101,8 @@ public class ConcentrationSite {
 
 	public synchronized void prepareAssaultParty() {
 		((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.ASSEMBLING_A_GROUP);
+		parties[currentParty]=0;
+		busyParties[currentParty]=1;
 	}
 
 	public synchronized void sendAssaultParty(int targetRoom) {
@@ -117,15 +125,6 @@ public class ConcentrationSite {
 
 	public synchronized int prepareExcursion(int thiefID) {
 		thieves[thiefID].setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
-		parties[currentParty]--;
-		notifyAll();
-		while(parties[currentParty]>0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
 		return targettedRoom;
 	}
 }

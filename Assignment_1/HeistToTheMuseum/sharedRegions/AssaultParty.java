@@ -5,9 +5,11 @@ import main.*;
 
 import commInfra.*;
 import entities.*;
+import genclass.GenericIO;
 
 public class AssaultParty {
-
+    
+    
 	private int partyID;
 	private int partyMembers;
 	private int[][] partyInfo;
@@ -23,10 +25,10 @@ public class AssaultParty {
 	public int getPartyID() {
 		return partyID;
 	}
-
-	public synchronized void crawlIn(int thiefID, int maxDisp, int dist) {
-		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
-//		distance = dist;
+    
+    public synchronized void crawlIn(int thiefID,int maxDisp,int dist){
+    	((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
+		distance = dist;
 //		
 //		int inPartyID = partyMembers;
 //		partyMembers++;
@@ -59,9 +61,8 @@ public class AssaultParty {
 //			}
 //		}
 		System.out.println("Thief_" + thiefID + " have arrived to room");
-		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);
-
-//		partyMembers--;
+    	((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.AT_A_ROOM);   
+    	//partyMembers--;
 //		while(partyMembers>0) {
 //			try {
 //				wait();
@@ -70,45 +71,46 @@ public class AssaultParty {
 //			}
 //		}
 
-	}
+}
+
+public int allowMove(int maxDisp,int posID) {
+	int pos1 = 0;
+	int pos2 = 0;
+	int currentPosition = partyInfo[posID][1];
+	int newPosition = 0;
 	
-	public int allowMove(int maxDisp,int posID) {
-		int pos1 = 0;
-		int pos2 = 0;
-		int currentPosition = partyInfo[posID][1];
-		int newPosition = 0;
-		
-		for(int i=0;i<partyInfo.length;i++) {
-			if(i!=posID) {
-				if(pos1==0) {
-					pos1 = partyInfo[i][1];
-				}else {
-					pos2 = partyInfo[i][1];
-				}
+	for(int i=0;i<partyInfo.length;i++) {
+		if(i!=posID) {
+			if(pos1==0) {
+				pos1 = partyInfo[i][1];
+			}else {
+				pos2 = partyInfo[i][1];
 			}
 		}
-		for (int move =maxDisp;move>0;move--) {
-			newPosition = currentPosition + move;
-			if(newPosition-pos1<=3 && newPosition-pos2<=3 && newPosition<=distance) {
-				if((pos1 == distance || pos1 == distance)&& newPosition==distance) {
-					return move;
-				}
-				if(newPosition!=pos1 && newPosition!=pos2) {
-					return move;
-				}
+	}
+	for (int move =maxDisp;move>0;move--) {
+		newPosition = currentPosition + move;
+		if(newPosition-pos1<=3 && newPosition-pos2<=3 && newPosition<=distance) {
+			if((pos1 == distance || pos1 == distance)&& newPosition==distance) {
+				return move;
+			}
+			if(newPosition!=pos1 && newPosition!=pos2) {
+				return move;
 			}
 		}
-		return 0;
 	}
+	return 0;
+}
 
-	public synchronized void crawlOut(int thiefID, int maxDisp) {
-		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
-		System.out.println("Thief_" + thiefID + " have arrived to collectionSite");
-		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
-	}
+    public synchronized void crawlOut(int thiefID,int maxDisp){
+        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
+    	System.out.println("Thief_" + thiefID + " have arrived to collectionSite");
+    	
+        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.COLLECTION_SITE);
+    }    
 
-	public synchronized void reverseDirection(int thiefID) {
-		System.out.println("Thief_" + thiefID + " going back ");
-		((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
-	}
+    public synchronized void reverseDirection(int thiefID){
+    	System.out.println("Thief_" + thiefID + " going back ");
+        ((OrdinaryThief) Thread.currentThread()).setThiefState(OrdinaryThiefStates.CRAWLING_OUTWARDS);
+    } 
 }

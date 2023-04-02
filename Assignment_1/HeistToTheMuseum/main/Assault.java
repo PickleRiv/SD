@@ -20,6 +20,7 @@ public class Assault {
 		GeneralRepos repos;
 		String fileName;
 
+
 //        /* problem initialization */
 //        GenericIO.writelnString ("\n" + "      Problem of the Sleeping Barbers\n");
 //        GenericIO.writeString ("Number of iterations of the customer life cycle? ");
