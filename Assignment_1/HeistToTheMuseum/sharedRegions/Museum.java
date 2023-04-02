@@ -3,52 +3,64 @@ package sharedRegions;
 import main.*;
 
 public class Museum {
-    
-    private int [][] rooms;
-    
-    public Museum(int [][] rooms) {
-    	this.rooms = rooms;
-    }
-    
-    public int getDistToRoom(int roomID) {
-    	return 0;}
-    
-    public int getAvailableRoom() {
-    	for (int i=0;i<rooms.length;i++) {
-    		if (rooms[i][2]==1 && rooms[i][3]!=1) {
-    			return i;
-    		}
-    	}
-    	if(isLooted()) {
-    		return -2;
-    	}
-    	return -1;
-    }
-    
-    
-    public int numAvail() {
-    	int count=0;
-    	for (int i=0;i<rooms.length;i++) {
-    		if (rooms[i][2]==1 && rooms[i][3]!=1) {
-    			count++;
-    		}
-    	}
-    	return count;
-    }
-    
-    
-    public boolean isLooted() {
-    	for (int i=0;i<rooms.length;i++) {
-    		if (rooms[i][3]==1) {
-    			return true;
-    		}
-    	}
-    	return false;
 
-    }
+	private int[][] rooms;
+	private boolean[] carryCanvas;
 
-    
-   
-	public synchronized void rollACanvas(){
-    }
+	public Museum(int[][] rooms) {
+		this.rooms = rooms;
+		carryCanvas = new boolean[SimulationParameters.M];
+	}
+
+	public int getDistToRoom(int roomID) {
+		return rooms[roomID][0];
+	}
+
+	public int getAvailableRoom() {
+		for (int i = 0; i < rooms.length; i++) {
+			if (rooms[i][2] == 1 && rooms[i][3] != 1) {
+				rooms[i][2]=0;
+				return i;
+			}
+		}
+		if (isLooted()) {
+			return -2;
+		}
+		return -1;
+	}
+
+	public int numCanvas(int roomID) {
+		if (rooms[roomID][1] > 0) {
+			return rooms[roomID][1];
+		}
+		return 0;
+	}
+
+	public boolean hasCanvas(int thiefID) {
+		return carryCanvas[thiefID];
+	}
+
+	public int numAvailRooms() {
+		int count = 0;
+		for (int i = 0; i < rooms.length; i++) {
+			if (rooms[i][2] == 1 && rooms[i][3] != 1) {
+				count++;
+			}
+		}
+		return count;
+	}
+
+	public boolean isLooted() {
+		for (int i = 0; i < rooms.length; i++) {
+			if (rooms[i][3] == 1) {
+				return true;
+			}
+		}
+		return false;
+
+	}
+
+	public synchronized void rollACanvas() {
+
+	}
 }

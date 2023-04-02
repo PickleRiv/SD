@@ -27,6 +27,14 @@ public class ControlAndCollectionSite {
     */
     public synchronized void takeARest(){
         ((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.WAITING_FOR_ARRIVAL);
+        while(true) {
+        	try {
+        		System.out.println("Master is waiting");
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+        }
     }
     
 

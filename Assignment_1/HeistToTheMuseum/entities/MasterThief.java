@@ -65,7 +65,7 @@ public class MasterThief extends Thread {
         			ccSite.sumUpResults();
         			break;
         		}
-            	if(conSite.isBusy() || museum.numAvail()<SimulationParameters.G) {
+            	if(conSite.isBusy() || museum.numAvailRooms()<SimulationParameters.G) {
         			ccSite.takeARest();
         			break;
         		}
@@ -75,7 +75,7 @@ public class MasterThief extends Thread {
             case 2:                                         				// Assembling a group
             	int availableRoom = museum.getAvailableRoom();
             	if (availableRoom != -2 || availableRoom != -1) {
-                	conSite.sendAssaultParty(museum.getAvailableRoom());				// state changes to deciding what to do
+                	conSite.sendAssaultParty(availableRoom);				// state changes to deciding what to do
                 	partiesSent[currentParty]++;
                 	currentParty=-1;
             	}

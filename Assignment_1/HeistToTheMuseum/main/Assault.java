@@ -48,11 +48,7 @@ public class Assault {
 			room[2] = 1;
 			room[3] = 0;
 		}
-
-		for (int[] room : rooms) {
-			System.out.println("roomDist: " + room[0] + " #Canvas: " + room[1] + " Available: " + room[2]
-					+ " isLooted: " + room[3]);
-		}
+		
 		for (int i = 0; i < aParty.length; i++) {
 			aParty[i] = new AssaultParty(i);
 
@@ -63,7 +59,7 @@ public class Assault {
 
 		// initialisation of master
 		master = new MasterThief("Master", 1, ccSite, conSite, aParty, museum);
-		System.out.println("Master Created");
+		//System.out.println("Master Created");
 
 		// initialisation of thieves
 		for (int i = 0; i < SimulationParameters.M; i++) {
@@ -71,20 +67,19 @@ public class Assault {
 					+ SimulationParameters.minDisp;
 			if (i < 3) {
 				thief[i] = new OrdinaryThief("Thief_" + (i + 1), i, conSite, aParty[0], museum, ccSite, maxDisp);
-				System.out.println("Thief_" + i + "Created");
 			} else {
 				thief[i] = new OrdinaryThief("Thief_" + (i + 1), i, conSite, aParty[1], museum, ccSite, maxDisp);
-				System.out.println("Thief_" + i + "Created");
 			}
+			//System.out.println("Thief_" + i + "Created");
 		}
 
 		System.out.println("Start of simulation.");
 
 		master.start();
-		System.out.println("Master Started");
+		//System.out.println("Master Started");
 		for (int i = 0; i < SimulationParameters.M; i++) {
 			thief[i].start();
-			System.out.println("Thief_" + i + " Started");
+			//System.out.println("Thief_" + i + " Started");
 		}
 
 		/* waiting for the end of the simulation */

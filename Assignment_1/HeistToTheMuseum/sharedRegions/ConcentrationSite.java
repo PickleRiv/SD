@@ -63,7 +63,7 @@ public class ConcentrationSite {
     }
 
 	public void masterBool() {
-		masterBool = masterBool ? true : false;
+		masterBool = masterBool ? false : true;
 	}
 
 	public synchronized int appraiseSit() {
@@ -102,6 +102,17 @@ public class ConcentrationSite {
 		masterBool();
 		targettedRoom = targetRoom;
 		notifyAll();
+		while(parties[currentParty]>0) {
+			try {
+				wait();
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("Team " + currentParty + "Sent");
+		masterBool();
+		currentParty=-1;
+
 	}
 
 	public synchronized int prepareExcursion(int thiefID) {
