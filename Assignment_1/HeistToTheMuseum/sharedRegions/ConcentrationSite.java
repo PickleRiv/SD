@@ -2,6 +2,7 @@ package sharedRegions;
 
 import entities.*;
 import main.SimulationParameters;
+import genclass.GenericIO;
 
 public class ConcentrationSite {
 
@@ -14,6 +15,7 @@ public class ConcentrationSite {
 	 * Reference to the thief threads
 	 */
 	private final OrdinaryThief[] thieves;
+	private final GeneralRepos repos;	
 
 	/**
 	 * Concentration instantiation
@@ -27,24 +29,31 @@ public class ConcentrationSite {
 		masterBool = false;
 		currentParty = -1;
 		targettedRoom = -1;
-
+		
+		
+		
+		
 		// Initialisation of students thread
 		thieves = new OrdinaryThief[SimulationParameters.M];
 		for (int i = 0; i < SimulationParameters.M; i++)
 			thieves[i] = null;
+		this.repos = null;
 	}
 
 	public synchronized void amINeeded(int thiefID) {
 		thieves[thiefID] = ((OrdinaryThief) Thread.currentThread());
 		thieves[thiefID].setThiefState(OrdinaryThiefStates.CONCENTRATION_SITE);
+		repos.setThiefState(((OrdinaryThief) Thread.currentThread()).getThiefID(), ((OrdinaryThief) Thread.currentThread()).getThiefState());
 		int partyID=thieves[thiefID].getThiefPartyID();
 		System.out.println("Thief_" + thiefID + " joined Party_" + thieves[thiefID].getThiefPartyID());
 		parties[partyID]++;
 		notifyAll();
-		while (!masterBool && partyID != currentParty) {
+		while (!masterBool || partyID != currentParty) {
 			try {
 				wait();
 			} catch (InterruptedException e) {
+				GenericIO.writelnString ("YUPPPPPPPPPPPPPPPPPPPPPPPPPp: " + e.getMessage ());
+		        System.exit (1);
 				e.printStackTrace();
 			}
 		}
@@ -69,6 +78,7 @@ public class ConcentrationSite {
 	public synchronized int appraiseSit() {
 		// Set the state of the MasterThief to "deciding what to do"
 		((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
+	    repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
 		// Check if there are any thieves in the assault parties
 		int party = fullParty();
 		while (party == -1) {
@@ -95,10 +105,14 @@ public class ConcentrationSite {
 
 	public synchronized void prepareAssaultParty() {
 		((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.ASSEMBLING_A_GROUP);
+	    repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
+		parties[currentParty]=0;
+		busyParties[currentParty]=1;
 	}
 
 	public synchronized void sendAssaultParty(int targetRoom) {
 		((MasterThief) Thread.currentThread()).setMasterState(MasterThiefStates.DECIDING_WHAT_TO_DO);
+	    repos.setMasterState(((MasterThief) Thread.currentThread()).getMasterState());
 		masterBool();
 		targettedRoom = targetRoom;
 		notifyAll();
@@ -106,15 +120,7 @@ public class ConcentrationSite {
 
 	public synchronized int prepareExcursion(int thiefID) {
 		thieves[thiefID].setThiefState(OrdinaryThiefStates.CRAWLING_INWARDS);
-		parties[currentParty]--;
-		notifyAll();
-		while(parties[currentParty]>0) {
-			try {
-				wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		repos.setThiefState(((OrdinaryThief) Thread.currentThread()).getThiefID(), ((OrdinaryThief) Thread.currentThread()).getThiefState());
 		return targettedRoom;
 	}
 }

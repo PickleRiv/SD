@@ -1,6 +1,7 @@
 package sharedRegions;
 
 import main.*;
+import genclass.GenericIO;
 
 public class Museum {
     
